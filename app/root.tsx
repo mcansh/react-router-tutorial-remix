@@ -1,4 +1,8 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type {
+  DataFunctionArgs,
+  LinksFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import {
   Form,
@@ -27,8 +31,10 @@ export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: appStylesHref }];
 };
 
-export async function loader() {
-  const contacts = await getContacts();
+export async function loader({ request }: DataFunctionArgs) {
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const contacts = await getContacts(q);
   return { contacts };
 }
 

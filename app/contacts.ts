@@ -36,7 +36,7 @@ function getContactsFromCache(): Promise<Contact[]> {
   });
 }
 
-export async function getContacts(query?: string) {
+export async function getContacts(query?: string | undefined | null) {
   await fakeNetwork(`getContacts:${query}`);
   let contacts = await getContactsFromCache();
   if (query) {
