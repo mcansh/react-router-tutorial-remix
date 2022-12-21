@@ -1,4 +1,5 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import {
   Form,
   Link,
@@ -32,7 +33,7 @@ export async function loader() {
 
 export async function action() {
   const contact = await createContact();
-  return { contact };
+  return redirect(`/contacts/${contact.id}/edit`);
 }
 
 export default function App() {
