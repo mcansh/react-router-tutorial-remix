@@ -1,6 +1,7 @@
 import type { DataFunctionArgs } from "@remix-run/node";
 import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import type { Contact as ContactType } from "~/contacts";
+import { updateContact } from "~/contacts";
 import { getContact } from "~/contacts";
 
 export async function loader({ params }: DataFunctionArgs) {
@@ -10,6 +11,14 @@ export async function loader({ params }: DataFunctionArgs) {
     throw new Response("contact not found", { status: 404 });
   }
   return contact;
+}
+
+export async function action({ request, params }: DataFunctionArgs) {
+  if (!params.contactId) throw new Error("missing contactId param");
+  let formData = await request.formData();
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") === "true",
+  });
 }
 
 export default function Contact() {

@@ -64,7 +64,7 @@ export async function getContact(id: Contact["id"]) {
 
 export async function updateContact(
   id: Contact["id"],
-  updates: Omit<Contact, "id">
+  updates: Partial<Omit<Contact, "id" | "createdAt">>
 ) {
   await fakeNetwork();
   let contacts = await getContactsFromCache();
