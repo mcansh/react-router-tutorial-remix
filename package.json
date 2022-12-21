@@ -8,9 +8,9 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@remix-run/node": "^1.9.0",
-    "@remix-run/react": "^1.9.0",
-    "@remix-run/serve": "^1.9.0",
+    "@remix-run/node": "1.10.0-pre.0",
+    "@remix-run/react": "1.10.0-pre.0",
+    "@remix-run/serve": "1.10.0-pre.0",
     "isbot": "^3.6.5",
     "lru-cache": "^7.14.1",
     "match-sorter": "^6.3.1",
@@ -19,8 +19,8 @@
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.9.0",
-    "@remix-run/eslint-config": "^1.9.0",
+    "@remix-run/dev": "1.10.0-pre.0",
+    "@remix-run/eslint-config": "1.10.0-pre.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@types/sort-by": "^1.2.0",
