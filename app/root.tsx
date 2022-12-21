@@ -17,7 +17,7 @@ import {
   useCatch,
   useLoaderData,
   useSubmit,
-  useTransition,
+  useNavigation,
 } from "@remix-run/react";
 import { createContact, getContacts } from "./contacts";
 import ErrorPage from "./error-page";
@@ -47,7 +47,7 @@ export async function action() {
 
 export default function App() {
   const { contacts, q } = useLoaderData<typeof loader>();
-  const navigation = useTransition();
+  const navigation = useNavigation();
   const submit = useSubmit();
 
   const searching =
