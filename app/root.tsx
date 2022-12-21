@@ -11,6 +11,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useTransition,
 } from "@remix-run/react";
 import { createContact, getContacts } from "./contacts";
 import ErrorPage from "./error-page";
@@ -38,6 +39,8 @@ export async function action() {
 
 export default function App() {
   const { contacts } = useLoaderData<typeof loader>();
+  const navigation = useTransition();
+
   return (
     <html lang="en">
       <head>
@@ -94,7 +97,10 @@ export default function App() {
               )}
             </nav>
           </div>
-          <div id="detail">
+          <div
+            id="detail"
+            className={navigation.state === "loading" ? "loading" : ""}
+          >
             <Outlet />
           </div>
         </div>
