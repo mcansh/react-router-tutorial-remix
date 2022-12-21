@@ -7,6 +7,7 @@ interface Contact {
   createdAt: number;
   first?: string;
   last?: string;
+  favorite?: boolean;
 }
 
 declare global {
