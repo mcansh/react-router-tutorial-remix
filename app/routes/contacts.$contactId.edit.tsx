@@ -1,7 +1,18 @@
+import type { DataFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import { getContact } from "~/contacts";
+
+export async function loader({ params }: DataFunctionArgs) {
+  if (!params.contactId) throw new Error("missing contactId param");
+  let contact = await getContact(params.contactId);
+  if (!contact) {
+    throw new Response("contact not found", { status: 404 });
+  }
+  return contact;
+}
 
 export default function EditContact() {
-  const contact = useLoaderData();
+  const contact = useLoaderData<typeof loader>();
 
   return (
     <Form method="post" id="contact-form">
