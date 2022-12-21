@@ -1,6 +1,6 @@
 import type { DataFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { getContact, updateContact } from "~/contacts";
 
 export async function loader({ params }: DataFunctionArgs) {
@@ -22,6 +22,7 @@ export async function action({ request, params }: DataFunctionArgs) {
 
 export default function EditContact() {
   const contact = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   return (
     <Form method="post" id="contact-form">
@@ -67,7 +68,14 @@ export default function EditContact() {
       </label>
       <p>
         <button type="submit">Save</button>
-        <button type="button">Cancel</button>
+        <button
+          type="button"
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          Cancel
+        </button>
       </p>
     </Form>
   );
