@@ -4,6 +4,5 @@ node_modules
 /build
 /public/build
 .env
-.vercel
-/api/index.js.map
-/api/index.js
+functions/\[\[path\]\].js
+functions/\[\[path\]\].js.map

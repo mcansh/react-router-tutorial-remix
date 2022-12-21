@@ -1,11 +1,11 @@
-import type { DataFunctionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/cloudflare";
 
+import type { ContactsDataFunctionArgs } from "../contacts";
 import { deleteContact } from "../contacts";
 
-export async function action({ params }: DataFunctionArgs) {
+export async function action({ context, params }: ContactsDataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
-  await deleteContact(params.contactId);
+  await deleteContact(context.CONTACTS, params.contactId);
   return redirect("/");
 }
 

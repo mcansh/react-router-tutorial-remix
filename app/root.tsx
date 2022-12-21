@@ -1,10 +1,6 @@
 import * as React from "react";
-import type {
-  DataFunctionArgs,
-  LinksFunction,
-  MetaFunction,
-} from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
+import { redirect } from "@remix-run/cloudflare";
 import {
   Form,
   Links,
@@ -19,6 +15,7 @@ import {
   useSubmit,
   useNavigation,
 } from "@remix-run/react";
+import type { ContactsDataFunctionArgs } from "./contacts";
 import { createContact, getContacts } from "./contacts";
 import ErrorPage from "./error-page";
 import appStylesHref from "./styles/index.css";
@@ -33,15 +30,15 @@ export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: appStylesHref }];
 };
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ context, request }: ContactsDataFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q") || undefined;
-  const contacts = await getContacts(q);
+  const contacts = await getContacts(context.CONTACTS, q);
   return { contacts, q };
 }
 
-export async function action() {
-  const contact = await createContact();
+export async function action({ context }: ContactsDataFunctionArgs) {
+  const contact = await createContact(context.CONTACTS);
   return redirect(`/contacts/${contact.id}/edit`);
 }
 

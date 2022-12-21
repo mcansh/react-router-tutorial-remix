@@ -1,6 +1,12 @@
+import type { DataFunctionArgs } from "@remix-run/cloudflare";
 import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
-import LRUCache from "lru-cache";
+
+export interface ContactsDataFunctionArgs extends DataFunctionArgs {
+  context: {
+    CONTACTS: KVNamespace;
+  };
+}
 
 export interface Contact {
   id: string;
@@ -13,83 +19,94 @@ export interface Contact {
   notes?: string;
 }
 
-declare global {
-  var __cache__: LRUCache<string, Contact[]>;
+function isContact(contact: any): contact is Contact {
+  return (
+    typeof contact === "object" &&
+    contact !== null &&
+    typeof contact.id === "string" &&
+    typeof contact.createdAt === "number"
+  );
 }
 
-let cache: LRUCache<string, Contact[]>;
-
-if (!global.__cache__) {
-  cache = new LRUCache<string, Contact[]>({ max: 100 });
-  global.__cache__ = cache;
-} else {
-  cache = global.__cache__;
+async function getContactsFromCache(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"]
+): Promise<Contact[]> {
+  let contacts = await kv.get("contacts");
+  if (contacts) {
+    let verified = JSON.parse(contacts).filter(isContact);
+    return verified;
+  }
+  kv.put("contacts", JSON.stringify([]));
+  return [];
 }
 
-function getContactsFromCache(): Promise<Contact[]> {
-  return new Promise<Contact[]>((res) => {
-    let contacts = cache.get("contacts");
-    if (contacts) return res(contacts);
-    contacts = [] as Contact[];
-    cache.set("contacts", contacts);
-    return res(contacts);
-  });
-}
-
-export async function getContacts(query?: string | undefined | null) {
+export async function getContacts(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"],
+  query?: string | undefined | null
+) {
   await fakeNetwork(`getContacts:${query}`);
-  let contacts = await getContactsFromCache();
+  let contacts = await getContactsFromCache(kv);
   if (query) {
     contacts = matchSorter(contacts, query, { keys: ["first", "last"] });
   }
   return contacts.sort(sortBy("last", "createdAt"));
 }
 
-export async function createContact() {
+export async function createContact(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"]
+) {
   await fakeNetwork();
   let id = Math.random().toString(36).substring(2, 9);
   let contact = { id, createdAt: Date.now() };
-  let contacts = await getContacts();
+  let contacts = await getContacts(kv);
   contacts.unshift(contact);
-  await set(contacts);
+  await set(kv, contacts);
   return contact;
 }
 
-export async function getContact(id: Contact["id"]) {
+export async function getContact(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"],
+  id: Contact["id"]
+) {
   await fakeNetwork(`contact:${id}`);
-  let contacts = await getContactsFromCache();
+  let contacts = await getContactsFromCache(kv);
   let contact = contacts.find((contact) => contact.id === id);
   return contact ?? null;
 }
 
 export async function updateContact(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"],
   id: Contact["id"],
   updates: Partial<Omit<Contact, "id" | "createdAt">>
 ) {
   await fakeNetwork();
-  let contacts = await getContactsFromCache();
+  let contacts = await getContactsFromCache(kv);
   let contact = contacts.find((contact) => contact.id === id);
   if (!contact) throw new Error(`No contact found for ${id}`);
   Object.assign(contact, updates);
-  await set(contacts);
+  await set(kv, contacts);
   return contact;
 }
 
-export async function deleteContact(id: Contact["id"]) {
-  let contacts = await getContactsFromCache();
+export async function deleteContact(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"],
+  id: Contact["id"]
+) {
+  let contacts = await getContactsFromCache(kv);
   let index = contacts.findIndex((contact) => contact.id === id);
   if (index > -1) {
     contacts.splice(index, 1);
-    await set(contacts);
+    await set(kv, contacts);
     return true;
   }
   return false;
 }
 
-function set(contacts: Contact[]) {
-  return new Promise((res) => {
-    res(cache.set("contacts", contacts));
-  });
+function set(
+  kv: ContactsDataFunctionArgs["context"]["CONTACTS"],
+  contacts: Contact[]
+) {
+  return kv.put("contacts", JSON.stringify(contacts));
 }
 
 let fakeCache: Record<string, true> = {};

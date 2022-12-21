@@ -1,22 +1,26 @@
-import type { DataFunctionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/cloudflare";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
+import type { ContactsDataFunctionArgs } from "~/contacts";
 import { getContact, updateContact } from "~/contacts";
 
-export async function loader({ params }: DataFunctionArgs) {
+export async function loader({ context, params }: ContactsDataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
-  let contact = await getContact(params.contactId);
+  let contact = await getContact(context.CONTACTS, params.contactId);
   if (!contact) {
     throw new Response("contact not found", { status: 404 });
   }
   return contact;
 }
 
-export async function action({ request, params }: DataFunctionArgs) {
+export async function action({
+  context,
+  params,
+  request,
+}: ContactsDataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  await updateContact(params.contactId, updates as any);
+  await updateContact(context.CONTACTS, params.contactId, updates as any);
   return redirect(`/contacts/${params.contactId}`);
 }
 

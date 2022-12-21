@@ -1,22 +1,28 @@
-import type { DataFunctionArgs } from "@remix-run/node";
 import { Form, useFetcher, useLoaderData } from "@remix-run/react";
-import type { Contact as ContactType } from "~/contacts";
+import type {
+  Contact as ContactType,
+  ContactsDataFunctionArgs,
+} from "~/contacts";
 import { updateContact } from "~/contacts";
 import { getContact } from "~/contacts";
 
-export async function loader({ params }: DataFunctionArgs) {
+export async function loader({ context, params }: ContactsDataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
-  let contact = await getContact(params.contactId);
+  let contact = await getContact(context.CONTACTS, params.contactId);
   if (!contact) {
     throw new Response("contact not found", { status: 404 });
   }
   return contact;
 }
 
-export async function action({ request, params }: DataFunctionArgs) {
+export async function action({
+  context,
+  params,
+  request,
+}: ContactsDataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
   let formData = await request.formData();
-  return updateContact(params.contactId, {
+  return updateContact(context.CONTACTS, params.contactId, {
     favorite: formData.get("favorite") === "true",
   });
 }
