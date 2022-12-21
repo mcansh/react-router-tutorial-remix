@@ -1,5 +1,6 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
+  Form,
   Link,
   Links,
   LiveReload,
@@ -10,7 +11,7 @@ import {
   useCatch,
   useLoaderData,
 } from "@remix-run/react";
-import { getContacts } from "./contacts";
+import { createContact, getContacts } from "./contacts";
 import ErrorPage from "./error-page";
 import appStylesHref from "./styles/index.css";
 
@@ -27,6 +28,11 @@ export const links: LinksFunction = () => {
 export async function loader() {
   const contacts = await getContacts();
   return { contacts };
+}
+
+export async function action() {
+  const contact = await createContact();
+  return { contact };
 }
 
 export default function App() {
@@ -53,9 +59,9 @@ export default function App() {
                 <div id="search-spinner" aria-hidden hidden={true} />
                 <div className="sr-only" aria-live="polite"></div>
               </form>
-              <form method="post">
+              <Form method="post">
                 <button type="submit">New</button>
-              </form>
+              </Form>
             </div>
             <nav>
               {contacts.length ? (
