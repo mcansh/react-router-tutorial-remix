@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import ErrorPage from "./error-page";
 import appStylesHref from "./styles/index.css";
 
 export const meta: MetaFunction = () => ({
@@ -65,4 +66,8 @@ export default function App() {
       </body>
     </html>
   );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return <ErrorPage error={error} />;
 }
