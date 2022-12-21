@@ -9,6 +9,7 @@ import {
   ScrollRestoration,
   useCatch,
 } from "@remix-run/react";
+import { getContacts } from "./contacts";
 import ErrorPage from "./error-page";
 import appStylesHref from "./styles/index.css";
 
@@ -21,6 +22,11 @@ export const meta: MetaFunction = () => ({
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: appStylesHref }];
 };
+
+export async function loader() {
+  const contacts = await getContacts();
+  return { contacts };
+}
 
 export default function App() {
   return (

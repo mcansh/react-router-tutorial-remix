@@ -12,14 +12,18 @@
     "@remix-run/react": "^1.9.0",
     "@remix-run/serve": "^1.9.0",
     "isbot": "^3.6.5",
+    "lru-cache": "^7.14.1",
+    "match-sorter": "^6.3.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sort-by": "^1.2.0"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.9.0",
     "@remix-run/eslint-config": "^1.9.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/sort-by": "^1.2.0",
     "eslint": "^8.27.0",
     "prettier": "^2.8.1",
     "typescript": "^4.8.4"
