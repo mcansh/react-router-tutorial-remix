@@ -2,12 +2,15 @@ import { matchSorter } from "match-sorter";
 import sortBy from "sort-by";
 import LRUCache from "lru-cache";
 
-interface Contact {
+export interface Contact {
   id: string;
   createdAt: number;
   first?: string;
   last?: string;
   favorite?: boolean;
+  avatar?: string;
+  twitter?: string;
+  notes?: string;
 }
 
 declare global {

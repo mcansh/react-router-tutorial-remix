@@ -1,10 +1,15 @@
 import type { DataFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import type { Contact as ContactType } from "~/contacts";
 import { getContact } from "~/contacts";
 
 export async function loader({ params }: DataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
-  return getContact(params.contactId);
+  let contact = await getContact(params.contactId);
+  if (!contact) {
+    throw new Response("contact not found", { status: 404 });
+  }
+  return contact;
 }
 
 export default function Contact() {
@@ -63,7 +68,7 @@ export default function Contact() {
   );
 }
 
-function Favorite({ contact }) {
+function Favorite({ contact }: { contact: ContactType }) {
   // yes, this is a `let` for later
   let favorite = contact.favorite;
   return (
