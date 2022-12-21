@@ -1,3 +1,4 @@
+import * as React from "react";
 import type {
   DataFunctionArgs,
   LinksFunction,
@@ -46,6 +47,13 @@ export async function action() {
 export default function App() {
   const { contacts, q } = useLoaderData<typeof loader>();
   const navigation = useTransition();
+
+  React.useEffect(() => {
+    let input = document.getElementById("q");
+    if (input && input instanceof HTMLInputElement && q) {
+      input.value = q;
+    }
+  }, [q]);
 
   return (
     <html lang="en">
