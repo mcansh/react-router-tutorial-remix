@@ -1,5 +1,6 @@
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
@@ -51,10 +52,10 @@ export default function App() {
             <nav>
               <ul>
                 <li>
-                  <a href={`contacts/1`}>Your Name</a>
+                  <Link to={`contacts/1`}>Your Name</Link>
                 </li>
                 <li>
-                  <a href={`contacts/2`}>Your Friend</a>
+                  <Link to={`contacts/2`}>Your Friend</Link>
                 </li>
               </ul>
             </nav>
