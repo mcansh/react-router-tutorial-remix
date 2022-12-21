@@ -78,9 +78,11 @@ export default function Contact() {
 }
 
 function Favorite({ contact }: { contact: ContactType }) {
-  const fetcher = useFetcher();
-  // yes, this is a `let` for later
+  const fetcher = useFetcher<typeof action>();
   let favorite = contact.favorite;
+  if (fetcher.submission?.formData) {
+    favorite = fetcher.submission.formData.get("favorite") === "true";
+  }
   return (
     <fetcher.Form method="post">
       <button
