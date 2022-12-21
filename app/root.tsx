@@ -16,6 +16,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useSubmit,
   useTransition,
 } from "@remix-run/react";
 import { createContact, getContacts } from "./contacts";
@@ -47,6 +48,7 @@ export async function action() {
 export default function App() {
   const { contacts, q } = useLoaderData<typeof loader>();
   const navigation = useTransition();
+  const submit = useSubmit();
 
   React.useEffect(() => {
     let input = document.getElementById("q");
@@ -74,6 +76,9 @@ export default function App() {
                   type="search"
                   name="q"
                   defaultValue={q}
+                  onChange={(event) => {
+                    submit(event.currentTarget.form);
+                  }}
                 />
                 <div id="search-spinner" aria-hidden hidden={true} />
                 <div className="sr-only" aria-live="polite"></div>
