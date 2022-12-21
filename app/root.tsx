@@ -33,9 +33,9 @@ export const links: LinksFunction = () => {
 
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url);
-  const q = url.searchParams.get("q");
+  const q = url.searchParams.get("q") || undefined;
   const contacts = await getContacts(q);
-  return { contacts };
+  return { contacts, q };
 }
 
 export async function action() {
@@ -44,7 +44,7 @@ export async function action() {
 }
 
 export default function App() {
-  const { contacts } = useLoaderData<typeof loader>();
+  const { contacts, q } = useLoaderData<typeof loader>();
   const navigation = useTransition();
 
   return (
@@ -65,6 +65,7 @@ export default function App() {
                   placeholder="Search"
                   type="search"
                   name="q"
+                  defaultValue={q}
                 />
                 <div id="search-spinner" aria-hidden hidden={true} />
                 <div className="sr-only" aria-live="polite"></div>
