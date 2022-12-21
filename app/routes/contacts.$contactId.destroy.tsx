@@ -8,3 +8,7 @@ export async function action({ params }: DataFunctionArgs) {
   await deleteContact(params.contactId);
   return redirect("/");
 }
+
+export function ErrorBoundary() {
+  return <div>Oops! There was an error.</div>;
+}
