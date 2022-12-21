@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "@remix-run/react";
 import ErrorPage from "./error-page";
 import appStylesHref from "./styles/index.css";
@@ -69,5 +70,11 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: { error: Error }) {
+  return <ErrorPage error={error} />;
+}
+
+export function CatchBoundary() {
+  let caught = useCatch();
+  let error = new Error(caught.statusText);
   return <ErrorPage error={error} />;
 }
