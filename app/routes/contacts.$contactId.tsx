@@ -1,5 +1,5 @@
 import type { DataFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useFetcher, useLoaderData } from "@remix-run/react";
 import type { Contact as ContactType } from "~/contacts";
 import { getContact } from "~/contacts";
 
@@ -69,17 +69,19 @@ export default function Contact() {
 }
 
 function Favorite({ contact }: { contact: ContactType }) {
+  const fetcher = useFetcher();
   // yes, this is a `let` for later
   let favorite = contact.favorite;
   return (
-    <Form method="post">
+    <fetcher.Form method="post">
       <button
+        type="submit"
         name="favorite"
         value={favorite ? "false" : "true"}
         aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }
