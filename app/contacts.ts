@@ -14,9 +14,14 @@ declare global {
   var __cache__: LRUCache<string, Contact[]>;
 }
 
-const cache = global.__cache__
-  ? global.__cache__
-  : new LRUCache<string, Contact[]>({ max: 100 });
+let cache: LRUCache<string, Contact[]>;
+
+if (!global.__cache__) {
+  cache = new LRUCache<string, Contact[]>({ max: 100 });
+  global.__cache__ = cache;
+} else {
+  cache = global.__cache__;
+}
 
 function getContactsFromCache(): Promise<Contact[]> {
   return new Promise<Contact[]>((res) => {
