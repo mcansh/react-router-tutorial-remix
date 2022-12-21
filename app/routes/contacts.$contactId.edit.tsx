@@ -1,6 +1,7 @@
 import type { DataFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { getContact } from "~/contacts";
+import { getContact, updateContact } from "~/contacts";
 
 export async function loader({ params }: DataFunctionArgs) {
   if (!params.contactId) throw new Error("missing contactId param");
@@ -9,6 +10,14 @@ export async function loader({ params }: DataFunctionArgs) {
     throw new Response("contact not found", { status: 404 });
   }
   return contact;
+}
+
+export async function action({ request, params }: DataFunctionArgs) {
+  if (!params.contactId) throw new Error("missing contactId param");
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  await updateContact(params.contactId, updates as any);
+  return redirect(`/contacts/${params.contactId}`);
 }
 
 export default function EditContact() {
