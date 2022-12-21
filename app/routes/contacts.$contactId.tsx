@@ -1,14 +1,14 @@
-import { Form } from "@remix-run/react";
+import type { DataFunctionArgs } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
+import { getContact } from "~/contacts";
+
+export async function loader({ params }: DataFunctionArgs) {
+  if (!params.contactId) throw new Error("missing contactId param");
+  return getContact(params.contactId);
+}
 
 export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placekitten.com/g/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+  const contact = useLoaderData<typeof loader>();
 
   return (
     <div id="contact">
