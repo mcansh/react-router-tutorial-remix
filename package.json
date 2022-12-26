@@ -21,7 +21,7 @@
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.18.0",
+    "@cloudflare/workers-types": "^4.20221111.1",
     "@remix-run/dev": "1.10.0-pre.0",
     "@remix-run/eslint-config": "1.10.0-pre.0",
     "@types/react": "^18.0.25",
